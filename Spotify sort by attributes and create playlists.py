@@ -234,10 +234,3 @@ while i+10 < length:
         pass
     i = i+10
   
-
-
-# In[ ]:
-
-
-
-
