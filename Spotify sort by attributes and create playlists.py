@@ -1,11 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# get token from
-# https://developer.spotify.com/console/post-playlist-tracks/
-
-# In[12]:
-
+# get token from https://developer.spotify.com/console/post-playlist-tracks/
 
 #################################
 ######### Change these: #########
@@ -34,8 +27,6 @@ sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 headers = {'Authorization': "Bearer {}".format(TOKEN)}
 
-
-# In[2]:
 
 
 ###########################################
@@ -168,21 +159,6 @@ for count, playlist_id in enumerate(playlists_id_list):
     agg_df = agg_df.append(one_playlist_df)
 
 agg_df.head()
-
-
-# In[4]:
-
-
-agg_df.shape
-
-
-# In[5]:
-
-
-agg_df['time_signature'].value_counts()
-
-
-# In[6]:
 
 
 #############################################################
