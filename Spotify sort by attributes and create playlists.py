@@ -1,12 +1,16 @@
+#################################
+######### CHANGE THESE: #########
+#################################
 # get token from https://developer.spotify.com/console/post-playlist-tracks/
-
-#################################
-######### Change these: #########
-#################################
 TOKEN = 'BQBD2aW8VW6FogsU28QtFi8AjysMI1Y3md4mwa_ckpYnZgwurHjAbwVT0LI7P-VlGyaqxToiH9q7ucn7SgoI6EdTp-oGJ6x3UMz38KNRY1u_xL4SZSvT765SYSuWecVwx_jjvAW2ADQBWflZ35sHN-buIhRFG8L2vEqDZ-F9h0TlbnU4GMc_wevejnzQYnryYYhf5GN_Hd_aQLCkuryL5W4dcfH0S1t0Aos9QcSTsFNX7zl3oBgdPjRBOIyEgcv4iQILoB2PoOaGGJ00'
 USER = 'jae94lee' #replace with your own spotify user id
 
+#authentification
+cid ="39bc11236f6a4bd79c9eadcdbce37c4e" 
+secret = "ac238b14eeb74bcd9e12947759c4eaab"
 
+
+#imports
 import json
 import requests
 from math import ceil
@@ -18,15 +22,9 @@ import spotipy.util as util
 from datetime import datetime
 pd.set_option('display.max_columns', None)
 
-#authentification
-cid ="39bc11236f6a4bd79c9eadcdbce37c4e" 
-secret = "ac238b14eeb74bcd9e12947759c4eaab"
-
 client_credentials_manager = SpotifyClientCredentials(client_id=cid, client_secret=secret)
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
-
 headers = {'Authorization': "Bearer {}".format(TOKEN)}
-
 
 
 ###########################################
@@ -142,9 +140,6 @@ def get_playlist_tracks(playlist_id):
     return final
 
 
-# In[3]:
-
-
 #####################################
 ################ RUN ################
 #####################################
@@ -167,8 +162,6 @@ agg_df.head()
 agg_df.to_csv('spotify_key_time_signature_output.csv')
 
 
-# In[7]:
-
 
 #############################################################
 ############ Manipulation. Do whatever you want #############
@@ -186,6 +179,7 @@ dff.head()
 ############### Create Playlist from track ids ###############
 ##############################################################
 
+######## CHANGE THIS ########
 #First, create a playlist on spotify and get its id through its link. (Can automate this in the future too)
 PLAYLIST_ID = '5xyc9ZHEHunDLuL6aJyQa5'
 
