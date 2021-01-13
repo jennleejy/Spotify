@@ -8,7 +8,7 @@ USER = 'jae94lee' #replace with your own spotify user id
 
 #authentification
 cid ="39bc11236f6a4bd79c9eadcdbce37c4e" 
-secret = "ac238b14eeb74bcd9e12947759c4eaab"
+secret = 
 
 
 
