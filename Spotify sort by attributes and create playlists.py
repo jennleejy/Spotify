@@ -1,6 +1,7 @@
 #################################
 ######### CHANGE THESE: #########
 #################################
+
 #get token from https://developer.spotify.com/console/post-playlist-tracks/
 TOKEN = 'BQCs-fOk7ZOwNik7wwO50apdwSw5Phbrk714MGEg6n7F56JAH2KtqpNnJFvpZXjXGa5hY8wGpfb8TFvlzzI_MJ8rAFFKdBKQZPuPea93tg0IB1iKnc7kmitS4xtAfQ9ABEadTv1DgBVKWKVXY8zLjNpvcG8YllIYhUQUhT0ng_8FUvTD947SMuwWYzaBzUc_w4UzcytJcWnAch-utCy_dnM1y11fX9XqOWeTnjK8FOvTgA56NGQYMzltNYq81TXUiPracXxfmqAs7Wvx'
 USER = 'jae94lee' #replace with your own spotify user id
@@ -8,6 +9,7 @@ USER = 'jae94lee' #replace with your own spotify user id
 #authentification
 cid ="39bc11236f6a4bd79c9eadcdbce37c4e" 
 secret = "ac238b14eeb74bcd9e12947759c4eaab"
+
 
 
 ########### Imports ###########
