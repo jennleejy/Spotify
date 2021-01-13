@@ -1,8 +1,9 @@
 #################################
 ######### CHANGE THESE: #########
 #################################
-# get token from https://developer.spotify.com/console/post-playlist-tracks/
-TOKEN = 'BQBD2aW8VW6FogsU28QtFi8AjysMI1Y3md4mwa_ckpYnZgwurHjAbwVT0LI7P-VlGyaqxToiH9q7ucn7SgoI6EdTp-oGJ6x3UMz38KNRY1u_xL4SZSvT765SYSuWecVwx_jjvAW2ADQBWflZ35sHN-buIhRFG8L2vEqDZ-F9h0TlbnU4GMc_wevejnzQYnryYYhf5GN_Hd_aQLCkuryL5W4dcfH0S1t0Aos9QcSTsFNX7zl3oBgdPjRBOIyEgcv4iQILoB2PoOaGGJ00'
+
+#get token from https://developer.spotify.com/console/post-playlist-tracks/
+TOKEN = 'BQCs-fOk7ZOwNik7wwO50apdwSw5Phbrk714MGEg6n7F56JAH2KtqpNnJFvpZXjXGa5hY8wGpfb8TFvlzzI_MJ8rAFFKdBKQZPuPea93tg0IB1iKnc7kmitS4xtAfQ9ABEadTv1DgBVKWKVXY8zLjNpvcG8YllIYhUQUhT0ng_8FUvTD947SMuwWYzaBzUc_w4UzcytJcWnAch-utCy_dnM1y11fX9XqOWeTnjK8FOvTgA56NGQYMzltNYq81TXUiPracXxfmqAs7Wvx'
 USER = 'jae94lee' #replace with your own spotify user id
 
 #authentification
@@ -10,7 +11,7 @@ cid ="39bc11236f6a4bd79c9eadcdbce37c4e"
 secret = "ac238b14eeb74bcd9e12947759c4eaab"
 
 
-#imports
+########### Imports ###########
 import json
 import requests
 from math import ceil
@@ -22,16 +23,18 @@ import spotipy.util as util
 from datetime import datetime
 pd.set_option('display.max_columns', None)
 
+
 client_credentials_manager = SpotifyClientCredentials(client_id=cid, client_secret=secret)
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 headers = {'Authorization': "Bearer {}".format(TOKEN)}
 
 
-###########################################
-############# HELER FUNCTIONS #############
-###########################################
 
-######### Get playlists ##############
+##################################################################
+########## EXTRACT DATA FROM USER'S EXISTING PLAYLISTS ###########
+##################################################################
+
+########## Get playlists ###########
 def get_playlists():
     try:
         #50 is the max
@@ -49,7 +52,7 @@ def get_playlists():
     return playlists_id_list
 
 
-############ Get audio features of each track id ##############
+########### Get audio features of each track id ###########
 def get_audio_features(song_id_list):
     audio_features_url = f"https://api.spotify.com/v1/audio-features?ids="
 
@@ -64,7 +67,7 @@ def get_audio_features(song_id_list):
     return x
 
 
-############ Get Time and Key Signatures and mode ##############
+########### Get Time and Key Signatures and mode ##########
 def get_key_and_time_signature(song_id_list):
     
     #pitch class dict
@@ -83,7 +86,7 @@ def get_key_and_time_signature(song_id_list):
     return kts_df
 
 
-########## Get playlist's track ids ##############
+########### Get playlist's track ids ############
 def get_playlist_tracks(playlist_id):
     playlist_tracks_url = f"https://api.spotify.com/v1/playlists/"
 
@@ -101,8 +104,7 @@ def get_playlist_tracks(playlist_id):
     for i in range(0, len(pt)):
         song = pt[i]['track']
         if song is None:
-            pass
-            
+            pass     
         else:
             artist = song['artists'][0]['name']
             artist_list.append(artist)
@@ -140,9 +142,10 @@ def get_playlist_tracks(playlist_id):
     return final
 
 
-#####################################
-################ RUN ################
-#####################################
+
+################################################
+###################### RUN #####################
+################################################
 
 #get the playlist ids
 playlists_id_list = get_playlists()
@@ -153,39 +156,39 @@ for count, playlist_id in enumerate(playlists_id_list):
     one_playlist_df = get_playlist_tracks(playlist_id)   
     agg_df = agg_df.append(one_playlist_df)
 
-agg_df.head()
-
-
-#############################################################
-######################## Export to csv ######################
-#############################################################
+########## Export to csv ##########
 agg_df.to_csv('spotify_key_time_signature_output.csv')
 
-
-
-#############################################################
-############ Manipulation. Do whatever you want #############
-#############################################################
-
-#Bb minor key only
-dff = agg_df[(agg_df['key'] == 'Bb') & (agg_df['mode'] == 'minor')]
-dff.head()
-
-
-# In[15]:
 
 
 ##############################################################
 ############### Create Playlist from track ids ###############
 ##############################################################
 
-######## CHANGE THIS ########
-#First, create a playlist on spotify and get its id through its link. (Can automate this in the future too)
-PLAYLIST_ID = '5xyc9ZHEHunDLuL6aJyQa5'
+########## Manipulation. Do whatever you want. ##########
+#Bb minor key only
+dff = agg_df[(agg_df['key'] == 'Bb') & (agg_df['mode'] == 'minor')]
 
 
+########## Create new playlist ##########
+new_playlist_url = f"https://api.spotify.com/v1/users/{USER}/playlists"
+#Change following preference
+request_body = json.dumps({
+          "name": "New Playlist",
+          "description": "Created using Spotify API.",
+          "public": True
+        })
+headers = {"Content-Type":"application/json", 'Authorization': "Bearer {}".format(TOKEN)}
+try: 
+    response = requests.post(new_playlist_url, data = request_body, headers=headers)
+except:
+    pass
+
+
+########## Populate the playlist with manipulated list of track ids ##########
 pre_uris = f"https://api.spotify.com/v1/playlists/"
 headers = {'Authorization': "Bearer {}".format(TOKEN)}
+playlist_id = response.json()['id']
 
 # get track ids in batches of 10 to avoid 414 response
 ids = dff.index.tolist()
@@ -195,12 +198,9 @@ i = 0
 while i+10 < length:
     ids_10 = ','.join(str(x) for x in new_ids[i:i+10])
 
-    uris = pre_uris + PLAYLIST_ID + '/tracks?uris=' + ids_10
-    print(uris)
+    uris = pre_uris + playlist_id + '/tracks?uris=' + ids_10
     try:   
         response = requests.post(uris, headers=headers)
-        print(response)
     except:
         pass
     i = i+10
-  
