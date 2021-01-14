@@ -192,10 +192,12 @@ headers = {'Authorization': "Bearer {}".format(TOKEN)}
 playlist_id = response.json()['id']
 
 # get track ids in batches of 10 to avoid 414 response
-ids = dff.index.tolist()
+deduped_ids = dff.index.drop_duplicates(keep='first')
+ids = deduped_ids.tolist()
 new_ids = ["spotify:track:" + item for item in ids]
 length = len(new_ids)
 i = 0
+
 while i+10 < length:
     ids_10 = ','.join(str(x) for x in new_ids[i:i+10])
 
